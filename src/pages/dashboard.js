@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Alert from 'react-bootstrap/Alert';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import axios from 'axios';
 import Footer from '../components/Footer';
@@ -11,11 +12,16 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      try {
       const response = await axios.get('/api/user');
       if (response.data) {
         setUser(response.data);
       } else {
         router.push('/login');
+      }
+     } catch (err) {
+        setError('Failed to fetch events. Please try again later.');
+        console.error("Error fetching events:", err);
       }
     };
     fetchUser();
@@ -33,6 +39,7 @@ const Dashboard = () => {
         <Col md={4}>
           <Card className="mb-4">
             <Card.Body>
+            {error && <Alert variant="danger">{error}</Alert>}
               <Card.Title>Profile</Card.Title>
               <Card.Text>Name: {user.name}</Card.Text>
               <Card.Text>Email: {user.email}</Card.Text>

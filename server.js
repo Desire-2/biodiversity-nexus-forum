@@ -1,12 +1,16 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-import http from 'http';
-import { Server } from 'socket.io';
+const http = require('http');
+const { Server } = require('socket.io');
+const dbConnect = require('./utils/dbConnect');
+const dotenv = require('dotenv');
+const Post = require('./models/Post'); // Assuming this is a model you're importing
 
+// Load environment variables
+dotenv.config();
+// Connect to the database
+dbConnect();
 
 const app = express();
-
 const server = http.createServer(app);
 const io = new Server(server);
 
@@ -17,33 +21,42 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(bodyParser.json());
+// Use Express's built-in JSON middleware
+app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/biodiversity-forum', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const postSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-  author: String,
-  date: { type: Date, default: Date.now },
-});
-
-const Post = mongoose.model('Post', postSchema);
 
 app.get('/api/posts', async (req, res) => {
-  const posts = await Post.find();
-  res.json(posts);
+  try {
+    const posts = await Post.find();
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch posts' });
+  }
 });
 
 app.post('/api/posts', async (req, res) => {
-  const newPost = new Post(req.body);
-  await newPost.save();
-  res.json(newPost);
+  try {
+    const newPost = new Post(req.body);
+    await newPost.save();
+    res.json(newPost);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create post' });
+  }
 });
 
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  console.log('Shutting down...');
+  server.close(() => {
+    console.log('HTTP server closed.');
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed.');
+      process.exit(0);
+    });
+  });
 });

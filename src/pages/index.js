@@ -15,8 +15,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'animate.css';
+import styles from './Home.module.css';  // Import the CSS module
 
 ChartJS.register(
   CategoryScale,
@@ -64,91 +63,91 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className={styles.homePage}>
       <Header />
-    <Container className="mt-4">
-      <div className="hero-section text-center mb-4">
-        <h1 className="display-4 animate__animated animate__fadeInDown">Welcome to the Biodiversity Nexus Forum</h1>
-        <p className="lead animate__animated animate__fadeInUp">
-          Join our community to discuss and share knowledge about biodiversity.
-        </p>
-        <Button variant="primary" href="/register" className="mb-3 animate__animated animate__pulse animate__infinite">
-          Join Now
-        </Button>
-      </div>
-      {error && <div className="alert alert-danger" role="alert">{error}</div>}
-      <Row className="mb-4">
-        <Col md={6}>
-          <Card className="mb-4 shadow-lg">
-            <Card.Body className="animate__animated animate__fadeInLeft">
-              <Card.Title>Community Growth</Card.Title>
-              <Line data={chartData} />
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card className="mb-4 shadow-lg">
-            <Card.Body className="animate__animated animate__fadeInRight">
-              <Card.Title>Recent Activity</Card.Title>
-              <p>Threads Created: 150</p>
-              <p>Comments Posted: 1200</p>
-              <p>New Members: 300</p>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={4}>
-          <Card className="mb-4 shadow-lg">
-            <Card.Body className="text-center animate__animated animate__zoomIn">
-              <FaForumbee size={50} className="mb-3 text-primary" />
-              <Card.Title>Forums</Card.Title>
-              <Card.Text>
-                Participate in various forums focused on different aspects of biodiversity.
-              </Card.Text>
-              <Button variant="primary" href="/forums" className="mt-3">Explore Forums</Button>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="mb-4 shadow-lg">
-            <Card.Body className="text-center animate__animated animate__zoomIn animate__delay-1s">
-              <FaRegNewspaper size={50} className="mb-3 text-success" />
-              <Card.Title>Articles</Card.Title>
-              <Card.Text>
-                Read and share articles related to biodiversity research and news.
-              </Card.Text>
-              <Button variant="success" href="/articles" className="mt-3">Read Articles</Button>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="mb-4 shadow-lg">
-            <Card.Body className="text-center animate__animated animate__zoomIn animate__delay-2s">
-              <FaCalendarAlt size={50} className="mb-3 text-warning" />
-              <Card.Title>Events</Card.Title>
-              <Card.Text>
-                Stay updated with upcoming events, workshops, and webinars.
-              </Card.Text>
-              <Button variant="warning" href="/events" className="mt-3">View Events</Button>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="mb-4 shadow-lg">
-            <Card.Body className="text-center animate__animated animate__zoomIn animate__delay-2s">
-              <FaBriefcase size={50} className="mb-3 text-warning" />
-              <Card.Title>Rwanda Job Board</Card.Title>
-              <Card.Text>
-                Stay updated with trending jobs in Rwanda.
-              </Card.Text>
-              <Button variant="warning" href="/jobs" className="mt-3">View Opportunities</Button>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Footer />
-    </Container>
+      <Container className="mt-4">
+        <div className={`${styles.heroSection} text-center mb-4`}>
+          <h1 className="display-4 animate__animated animate__fadeInDown">Welcome to the Biodiversity Nexus Forum</h1>
+          <p className="lead animate__animated animate__fadeInUp">
+            Join our community to discuss and share knowledge about biodiversity.
+          </p>
+          <Button variant="primary" href="/register" className="mb-3 animate__animated animate__pulse animate__infinite">
+            Join Now
+          </Button>
+        </div>
+        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+        <Row className="mb-4">
+          <Col md={6}>
+            <Card className={`mb-4 shadow-lg h-100 ${styles.gradientCard}`}>
+              <Card.Body className="animate__animated animate__fadeInLeft">
+                <Card.Title>Community Growth</Card.Title>
+                <Line data={chartData} />
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={6}>
+            <Card className={`mb-4 shadow-lg h-100 ${styles.gradientCard}`}>
+              <Card.Body className="animate__animated animate__fadeInRight">
+                <Card.Title>Recent Activity</Card.Title>
+                <p>Threads Created: 150</p>
+                <p>Comments Posted: 1200</p>
+                <p>New Members: 300</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={4}>
+            <Card className={`mb-4 shadow-lg ${styles.gradientCard} ${styles.hoverZoom}`}>
+              <Card.Body className="text-center animate__animated animate__zoomIn">
+                <FaForumbee size={50} className="mb-3 text-primary" />
+                <Card.Title className={styles.cardTitle}>Forums</Card.Title>
+                <Card.Text className={styles.cardText}>
+                  Participate in various forums focused on different aspects of biodiversity.
+                </Card.Text>
+                <Button variant="primary" href="/forums" className="mt-3">Explore Forums</Button>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4}>
+            <Card className={`mb-4 shadow-lg ${styles.gradientCard} ${styles.hoverZoom}`}>
+              <Card.Body className="text-center animate__animated animate__zoomIn animate__delay-1s">
+                <FaRegNewspaper size={50} className="mb-3 text-success" />
+                <Card.Title className={styles.cardTitle}>Articles</Card.Title>
+                <Card.Text className={styles.cardText}>
+                  Read and share articles related to biodiversity research and news.
+                </Card.Text>
+                <Button variant="success" href="/articles" className="mt-3">Read Articles</Button>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4}>
+            <Card className={`mb-4 shadow-lg ${styles.gradientCard} ${styles.hoverZoom}`}>
+              <Card.Body className="text-center animate__animated animate__zoomIn animate__delay-2s">
+                <FaCalendarAlt size={50} className="mb-3 text-warning" />
+                <Card.Title className={styles.cardTitle}>Events</Card.Title>
+                <Card.Text className={styles.cardText}>
+                  Stay updated with upcoming events, workshops, and webinars.
+                </Card.Text>
+                <Button variant="warning" href="/events" className="mt-3">View Events</Button>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4}>
+            <Card className={`mb-4 shadow-lg ${styles.gradientCard} ${styles.hoverZoom}`}>
+              <Card.Body className="text-center animate__animated animate__zoomIn animate__delay-2s">
+                <FaBriefcase size={50} className="mb-3 text-info" />
+                <Card.Title className={styles.cardTitle}>Rwanda Job Board</Card.Title>
+                <Card.Text className={styles.cardText}>
+                  Stay updated with trending jobs in Rwanda.
+                </Card.Text>
+                <Button variant="info" href="/jobs" className="mt-3">View Opportunities</Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Footer />
+      </Container>
     </div> 
   );
 };

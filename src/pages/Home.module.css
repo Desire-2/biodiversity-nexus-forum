@@ -1,0 +1,53 @@
+/* Home.module.css */
+.homePage {
+  background: linear-gradient(to right, #ffffff, #e6f7ff);
+  min-height: 100vh;
+}
+
+.heroSection {
+  background-image: url('../../public/WhatsApp\ Image\ 2024-06-17\ at\ 14.47.44_d0cdd6a5.jpg'); /* Add a path to your background image */
+  background-size: cover;
+  background-position: center;
+  color: rgb(4, 168, 20);
+  padding: 80px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.heroSection h1 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: bolder;
+  font-size: 3rem;
+  color: #06aaf7;
+  text-shadow: 2px 2px 4px rgba(63, 4, 4, 0.6);
+}
+
+.heroSection p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bolder;
+  color: #fa8602;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.gradientCard {
+  background: linear-gradient(135deg, #f3f3f3 0%, #e2e2e2 100%);
+  border: none;
+  border-radius: 10px;
+}
+
+.hoverZoom:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s;
+}
+
+.cardTitle {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
+}
+
+.cardText {
+  font-family: 'Open Sans', sans-serif;
+}
+
+
