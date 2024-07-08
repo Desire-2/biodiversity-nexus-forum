@@ -40,4 +40,24 @@ async function dbConnect() {
   }
 }
 
+// Ensure the process exits gracefully if it fails to connect to the database after several retries
+const MAX_RETRIES = 10;
+let retries = 0;
+
+async function connectWithRetries() {
+  try {
+    await dbConnect();
+  } catch (err) {
+    retries += 1;
+    if (retries > MAX_RETRIES) {
+      console.error('Exceeded maximum number of retries. Exiting...');
+      process.exit(1);
+    }
+    console.log(`Retrying to connect to MongoDB (${retries}/${MAX_RETRIES})...`);
+    setTimeout(connectWithRetries, 5000);
+  }
+}
+
+connectWithRetries();
+
 module.exports = dbConnect;

@@ -4,19 +4,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import styles from './Login.module.css';
-import { useRouter } from 'next/router';
+import styles from './ResetPassword.module.css';
 
-const Login = () => {
+const ResetPassword = () => {
   const [message, setMessage] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await axios.post('/api/auth/login', values);
-      setMessage('Login successful! Redirecting to dashboard...');
+      const response = await axios.post('/api/auth/reset-password', values);
+      setMessage('Password reset successful! You can now log in with your new password.');
       resetForm();
-      router.push('/dashboard');
     } catch (error) {
       setMessage(error.response.data.error);
     }
@@ -31,12 +28,15 @@ const Login = () => {
           <div className="col-md-6">
             <div className={`card ${styles.card}`}>
               <div className={`card-body ${styles.cardBody}`}>
-                <h1 className={styles.heading}>Login</h1>
+                <h1 className={styles.heading}>Reset Password</h1>
                 <Formik
-                  initialValues={{ email: '', password: '', rememberMe: false }}
+                  initialValues={{ email: '', newPassword: '', confirmNewPassword: '' }}
                   validationSchema={Yup.object({
                     email: Yup.string().email('Invalid email address').required('Required'),
-                    password: Yup.string().required('Required'),
+                    newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
+                    confirmNewPassword: Yup.string()
+                      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+                      .required('Required'),
                   })}
                   onSubmit={handleSubmit}
                 >
@@ -48,21 +48,19 @@ const Login = () => {
                         <ErrorMessage name="email" component="div" className={styles.errorMessage} />
                       </div>
                       <div className={styles.inputField}>
-                        <label htmlFor="password" className={styles.formLabel}>Password</label>
-                        <Field name="password" type="password" className="form-control" />
-                        <ErrorMessage name="password" component="div" className={styles.errorMessage} />
+                        <label htmlFor="newPassword" className={styles.formLabel}>New Password</label>
+                        <Field name="newPassword" type="password" className="form-control" />
+                        <ErrorMessage name="newPassword" component="div" className={styles.errorMessage} />
                       </div>
                       <div className={styles.inputField}>
-                        <Field type="checkbox" name="rememberMe" />
-                        <label htmlFor="rememberMe" className={styles.rememberMeLabel}>Remember Me</label>
+                        <label htmlFor="confirmNewPassword" className={styles.formLabel}>Confirm New Password</label>
+                        <Field name="confirmNewPassword" type="password" className="form-control" />
+                        <ErrorMessage name="confirmNewPassword" component="div" className={styles.errorMessage} />
                       </div>
                       <button type="submit" className={`btn btn-primary ${styles.submitButton}`} disabled={isSubmitting}>
-                        {isSubmitting ? 'Logging in...' : 'Login'}
+                        {isSubmitting ? 'Resetting...' : 'Reset Password'}
                       </button>
                       {message && <p className={styles.infoMessage}>{message}</p>}
-                      <div className={styles.resetPasswordLink}>
-                        <a href="/forgot-password">Forgot Password?</a>
-                      </div>
                     </Form>
                   )}
                 </Formik>
@@ -76,4 +74,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

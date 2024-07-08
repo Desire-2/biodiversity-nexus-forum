@@ -1,12 +1,36 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  profilePicture: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
+  socialLinks: {
+    twitter: { type: String },
+    facebook: { type: String },
+    linkedin: { type: String },
+  },
   threads: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Forum',
@@ -15,10 +39,12 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment',
   }],
+  _id: mongoose.Schema.Types.ObjectId,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
-// Hash the password before saving
-userSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -27,9 +53,8 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// Method to compare password for login
-userSchema.methods.comparePassword = async function(enteredPassword) {
+UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export default mongoose.models.User || mongoose.model('User', userSchema);
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

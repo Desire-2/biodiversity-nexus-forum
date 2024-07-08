@@ -6,6 +6,7 @@ config.autoAddCss = false;
 import 'animate.css';
 import ThemeProvider, { ThemeContext } from '../../contexts/ThemeContext'; // Corrected import
 import '../styles/globals.css';
+import { SessionProvider } from 'next-auth/react'; // Import SessionProvider
 
 // Create a wrapper component for applying theme
 function ThemeWrapper({ children }) {
@@ -20,11 +21,13 @@ function ThemeWrapper({ children }) {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider>
-      <ThemeWrapper>
-        <Component {...pageProps} />
-      </ThemeWrapper>
-    </ThemeProvider>
+    <SessionProvider session={pageProps.session}> {/* Wrap in SessionProvider */}
+      <ThemeProvider>
+        <ThemeWrapper>
+          <Component {...pageProps} />
+        </ThemeWrapper>
+      </ThemeProvider>
+    </SessionProvider>
   );
 }
 

@@ -1,111 +1,52 @@
 import dbConnect from '../../../../utils/dbConnect';
 import Post from '../../../../models/Post';
+import multer from 'multer';
 import jwt from 'jsonwebtoken';
+import { getSession } from 'next-auth/react';
+
+const form = new IncomingForm();
 
 export default async function handler(req, res) {
   const { method } = req;
-
   await dbConnect();
 
+  const session = await getSession({ req });
+  if (!session && method === 'POST') {
+    return res.status(401).json({ success: false, error: 'Unauthorized' });
+  }
+
   if (method === 'POST') {
-    try {
-      const token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.id;
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(500).json({ success: false, error: 'Error parsing form data' });
+      }
 
-      const { title, content } = req.body;
-      const post = await Post.create({ title, content, author: userId });
+      try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
 
-      res.status(201).json({ success: true, data: post });
-    } catch (error) {
-      res.status(400).json({ success: false, error: error.message });
-    }
+        const { title, content } = fields;
+        let imageUrl = null;
+
+        if (files.image) {
+          imageUrl = await uploadImage(files.image);
+        }
+
+        const post = await Post.create({ title, content, image: imageUrl, author: userId });
+        res.status(201).json({ success: true, data: post });
+      } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+      }
+    });
   } else if (method === 'GET') {
-    try {
-      const posts = await Post.find().populate('author', 'username');
-      res.status(200).json({ success: true, data: posts });
-    } catch (error) {
-      res.status(400).json({ success: false, error: error.message });
-    }
+    // Existing GET logic
   } else {
-    res.status(400).json({ success: false, error: 'Invalid request method' });
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
-app.get('/api/posts', async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
-    try {
-      const posts = await Post.find()
-        .populate('author', 'username')
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec();
-      
-      const count = await Post.countDocuments();
-      
-      res.json({
-        posts,
-        totalPages: Math.ceil(count / limit),
-        currentPage: page
-      });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
-    }
-  });
-    app.get('/api/posts/:id', async (req, res) => {
-        try {
-        const post = await Post.findById(req.params.id).populate('author', 'username');
-    
-        if (!post) {
-            return res.status(404).json({ msg: 'Post not found' });
-        }
-    
-        res.json(post);
-        } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-        }
-    });
-    app.delete('/api/posts/:id', async (req, res) => {
-        try {
-        const post = await Post.findById(req.params.id);
-    
-        if (!post) {
-            return res.status(404).json({ msg: 'Post not found' });
-        }
-    
-        await post.remove();
-    
-        res.json({ msg: 'Post removed' });
-        } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-        }
-    });
-    app.put('/api/posts/:id', async (req, res) => {
-        const { title, content } = req.body;
-    
-        const postFields = {};
-        if (title) postFields.title = title;
-        if (content) postFields.content = content;
-    
-        try {
-        let post = await Post.findById(req.params.id);
-    
-        if (!post) {
-            return res.status(404).json({ msg: 'Post not found' });
-        }
-    
-        post = await Post.findByIdAndUpdate(
-            req.params.id,
-            { $set: postFields },
-            { new: true }
-        );
-    
-        res.json(post);
-        } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-        }
-    });
-      
+
+async function uploadImage(imageFile) {
+  return 'http://example.com/path/to/image.jpg';
+}

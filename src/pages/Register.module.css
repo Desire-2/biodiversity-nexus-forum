@@ -1,0 +1,102 @@
+/* Register.module.css */
+.container {
+    margin-top: 3rem;
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .cardBody {
+    padding: 2rem;
+  }
+  
+  .heading {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: #343a40;
+    animation: fadeInDown 1s;
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .formLabel {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .inputField {
+    margin-bottom: 1.5rem;
+  }
+  
+  .inputField input {
+    border: 2px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    transition: border-color 0.2s;
+  }
+  
+  .inputField input:focus {
+    border-color: #007bff;
+  }
+  
+  .submitButton {
+    width: 100%;
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+  
+  .errorMessage {
+    font-size: 0.875rem;
+    color: red;
+    margin-top: 0.25rem;
+  }
+  
+  .infoMessage {
+    font-size: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+    color: #17a2b8;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .cardBody {
+      padding: 1.5rem;
+    }
+  
+    .heading {
+      font-size: 1.5rem;
+    }
+  }
+  
